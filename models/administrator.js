@@ -12,11 +12,7 @@ const Admin = sequelize.define('Admin', {
     allowNull: false,
     unique: true,
   },
-  adminPhoneNumber: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
+
   adminEmail: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -29,12 +25,18 @@ const Admin = sequelize.define('Admin', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-}, {
+  Role:{
+    allowNull:false,
+    type:DataTypes.ENUM,
+     values: ["ESS","M","VMED","VMSA","ESD","G","VMSAK","VMEDK","VMSAK"]
+
+  }
+
+}, 
+{
   timestamps: true,
 });
 
-// sequelize.sync()
-//   .then(() => console.log('Admin model synced with database'))
-//   .catch((err) => console.log('Error syncing the model:', err));
+
 
 module.exports = Admin;

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const logger = require("../utils/logger");
-const User = require("../models/admin");
+const User = require("../models/administrator");
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -14,6 +14,7 @@ const authMiddleware = async (req, res, next) => {
 
     const user = await User.findOne({ _id: decoded.userId });
     if (!user) {
+
       throw new Error("User not found");
     }
 
