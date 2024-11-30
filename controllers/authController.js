@@ -7,18 +7,18 @@ const logger = require("../utils/logger");
 
 exports.registerAdmin = async (req, res) => {
   try {
-    const { adminName, adminEmail, adminPassword, adminPhoneNumber } = req.body;
+    const { adminName, adminEmail, adminPassword, adminPhoneNumber,Role } = req.body;
 
     const existingAdmin = await Admin.findOne({
       where: {
-        [Op.or]: [{ adminEmail }, { adminPhoneNumber }],
+        [Op.or]: [{ adminEmail }, { Role }],
       },
     });
     if (existingAdmin) {
       return res
         .status(400)
         .json({
-          error: "Admin already exists with this email or phone number",
+          error: "Admin already exists with this email or ROle",
         });
     }
 
@@ -28,8 +28,13 @@ exports.registerAdmin = async (req, res) => {
       adminName,
       adminEmail,
       adminPassword: hashedPassword,
-      adminPhoneNumber,
+      Role,
     });
+
+    if(!newAdmin){
+      return  res.status(401).send("failed to register");
+      
+    }
 
     res.status(201).json({ message: "you have successfully registered" });
   } catch (err) {
@@ -101,7 +106,7 @@ exports.logOutAdmin = async (req, res) => {
 
 function generateJWT(admin) {
   return jwt.sign({ adminId: admin.id }, process.env.JWT_SECRET, {
-    expiresIn: "1d",
+    expiresIn: "30d",
   });
 }
 

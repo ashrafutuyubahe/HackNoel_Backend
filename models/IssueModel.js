@@ -2,7 +2,7 @@ const { DataTypes, Model } = require("sequelize");
 const sequelize = require("../config/db");
 
 const IssueModel = sequelize.define(
-  "Admin",
+  "Issue",
   {
     problemId: {
       type: DataTypes.INTEGER,
