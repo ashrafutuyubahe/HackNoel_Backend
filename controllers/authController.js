@@ -4,10 +4,9 @@ const { Op, Sequelize } = require("sequelize");
 const bcrypt = require("bcrypt");
 const logger = require("../utils/logger");
 
-
 exports.registerAdmin = async (req, res) => {
   try {
-    const { adminName, adminEmail, adminPassword, adminPhoneNumber,Role } = req.body;
+    const { adminName, adminEmail, adminPassword, Role } = req.body;
 
     const existingAdmin = await Admin.findOne({
       where: {
@@ -15,11 +14,9 @@ exports.registerAdmin = async (req, res) => {
       },
     });
     if (existingAdmin) {
-      return res
-        .status(400)
-        .json({
-          error: "Admin already exists with this email or ROle",
-        });
+      return res.status(400).json({
+        error: "Admin already exists with this email or ROle",
+      });
     }
 
     const hashedPassword = await bcrypt.hash(adminPassword, 10);
@@ -28,12 +25,12 @@ exports.registerAdmin = async (req, res) => {
       adminName,
       adminEmail,
       adminPassword: hashedPassword,
+
       Role,
     });
 
-    if(!newAdmin){
-      return  res.status(401).send("failed to register");
-      
+    if (!newAdmin) {
+      return res.status(401).send("failed to register");
     }
 
     res.status(201).json({ message: "you have successfully registered" });
@@ -61,48 +58,41 @@ exports.loginAdmin = async (req, res) => {
   }
 };
 
-
-
 exports.logOutAdmin = async (req, res) => {
   try {
     const token = req.headers["authorization"];
     if (!token) {
       return res.status(400).json({
         message: "No token provided in the request header",
-        error: true
+        error: true,
       });
     }
 
     const tokenValue = token.split(" ")[1];
 
-    
     jwt.verify(tokenValue, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
-       
         return res.status(401).json({
           message: "Unauthorized, token is invalid or already logged out",
-          error: true
+          error: true,
         });
       }
 
-      
       res.clearCookie("token");
 
-     
       return res.status(200).json({
         message: "Successfully logged out. Token invalidated.",
-        error: false
+        error: false,
       });
     });
   } catch (err) {
     logger.error("Error logging out admin:", err);
     return res.status(500).json({
       message: "Internal server error",
-      error: true
+      error: true,
     });
   }
 };
-
 
 function generateJWT(admin) {
   return jwt.sign({ adminId: admin.id }, process.env.JWT_SECRET, {
