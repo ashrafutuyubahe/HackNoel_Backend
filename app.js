@@ -6,19 +6,13 @@
   const PORT = process.env.PORT || 3000;
   const connectDB = require("./config/db");
   const authRoutes = require("./routes/authRoute");
-  const attendendenceRoutes= require("./routes/attendenceRoutes");
-  const monitorAttendance= require("./utils/monitorAttendance");
-  const memberRoutes= require("./routes/memberRoutes")
-  const logger = require("./utils/logger");
+   const logger = require("./utils/logger");
   const swaggerUi = require('swagger-ui-express');
   // const swaggerSpec = require('./config/swagger'); 
   const cors= require("cors");
 
 
   
-
-
-
 
   const app = express();
 
@@ -36,10 +30,8 @@
 
 
   //api section
-  app.use("/choir_manager/v1/auth", authRoutes);
-  app.use("/choir_manager/v1/attendaces",attendendenceRoutes);
-  app.use("/choir_manager/v1/member",memberRoutes);
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use("/choir_manager/v1/auth", authRoutes);  
+  // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 
