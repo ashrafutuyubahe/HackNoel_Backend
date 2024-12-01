@@ -95,7 +95,7 @@ exports.logOutAdmin = async (req, res) => {
 };
 
 function generateJWT(admin) {
-  return jwt.sign({ adminId: admin.id }, process.env.JWT_SECRET, {
+  return jwt.sign({ adminId: admin.id,adminRole:Role}, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
 }

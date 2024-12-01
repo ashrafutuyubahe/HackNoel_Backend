@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controllers/authController');
+const ProblemControler = require('../controllers/problemCOntroller');
 
 const registerSwagger = require('../swagger/register&loginSwagger');
 
 
 router.post('/register', authController.registerAdmin);
 
-router.post('/ReportProblem', authController.loginAdmin);
-router.get("/GetAllProblems",authController.logOutAdmin);
-router.get("/getProblem",authController.logOutAdmin);
+router.post('/ReportProblem', ProblemControler.ReportProblem);
+router.get("/GetAllProblems",ProblemControler.GetAllProblems); 
+router.get("/getProblemBYCategory",ProblemControler.GetProblemsByCategory); 
 
-router.get("/",authController.getGreetings);
-
+router.get("/greetings",authController.getGreetings);
+ 
 module.exports = router;    
