@@ -9,7 +9,7 @@ router.post('/register', authController.registerAdmin);
 
 router.post('/ReportProblem', ProblemControler.ReportProblem);
 router.get("/GetAllProblems",ProblemControler.GetAllProblems); 
-router.get("/getProblem",ProblemControler.GetProblem); 
+router.get("/getProblemBYCategory",ProblemControler.GetProblemsByCategory); 
 
 router.get("/greetings",authController.getGreetings);
  

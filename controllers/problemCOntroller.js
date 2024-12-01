@@ -1,60 +1,105 @@
-const Admin = require("../models/administrator");
+const ProblemModel = require("../models/IssueModel");
 const jwt = require("jsonwebtoken");
-const { Op, Sequelize } = require("sequelize");
+const { Op, Sequelize, where } = require("sequelize");
 const bcrypt = require("bcrypt");
 const logger = require("../utils/logger");
 
-exports.registerAdmin = async (req, res) => {
+exports.ReportProblem = async (req, res) => {
   try {
-    const { adminName, adminEmail, adminPassword, Role } = req.body;
+    const { problemTitle, problemDescription, ProblemReporter } = req.body;
 
-    const existingAdmin = await Admin.findOne({
-      where: {
-        [Op.or]: [{ adminEmail }, { Role }],
-      },
-    });
-    if (existingAdmin) {
-      return res.status(400).json({
-        error: "Admin already exists with this email or ROle",
-      });
+    const ExistingProblem = await ProblemModel.findAll({ ProblemReporter });
+
+    if ((!problemTitle, !problemDescription, !ProblemReporter)) {
+      return res.status(401).send("all fields are required please");
     }
 
-    const hashedPassword = await bcrypt.hash(adminPassword, 10);
-
-    const newAdmin = await Admin.create({
-      adminName,
-      adminEmail,
-      adminPassword: hashedPassword,
-
-      Role,
+    const saveProblem = await ProblemModel.create({
+      problemTitle,
+      problemDescription,
+      ProblemReporter,
     });
 
-    if (!newAdmin) {
-      return res.status(401).send("failed to register");
+    if (!saveProblem) {
+      return res.status(401).send("failed to report your problem ");
     }
 
-    res.status(201).json({ message: "you have successfully registered" });
+    res.status(201).json({ message: "Problem reported sucessfully" });
+  } catch (error) {
+    logger.error("Error while Reporting the problem", err);
+    res.status(500).send("internal server eror ");
+  }
+};
+
+exports.GetAllProblems = async (req, res) => {
+  try {
+    const problems = await ProblemModel.findAll();
+
+    if (!problems) {
+      return res.status(401).send("Error while  getting problems");
+    }
+
+    res.status(200).json({ problems });
   } catch (err) {
-    console.log(err);
-    logger.error("Error registering admin:", err);
+    logger.error("Error getting problems :", err);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
-exports.loginAdmin = async (req, res) => {
-  try {
-    const { adminEmail, adminPassword } = req.body;
+exports.GetProblemsByCategory = async (req, res) => {
+  const { adminRole } = req.body;
 
-    const admin = await Admin.findOne({ where: { adminEmail } });
-    if (!admin || !(await bcrypt.compare(adminPassword, admin.adminPassword))) {
-      return res.status(401).json({ error: "Invalid email or password" });
-    }
+  
 
-    const token = generateJWT(admin);
-    res.json({ token });
-  } catch (err) {
-    logger.error("Error logging in admin:", err);
-    res.status(500).json({ error: "Internal server error" });
+     const  RetrieveProblemes= (adminRole)=>{
+
+  
+    
+    
+    
+
+     }
+
+  switch (adminRole) {
+    case "ESS":
+      RetrieveProblemes(adminId);
+
+      break;
+    case "M":
+      RetrieveProblemes(adminId);
+
+      break;
+    case "VMED":
+      RetrieveProblemes(adminId);
+
+      break;
+    case "VMSA":
+      RetrieveProblemes(adminId);
+
+      break;
+    case "ESD":
+      RetrieveProblemes(adminId);
+
+      break;
+    case "G":
+      RetrieveProblemes(adminId);
+
+      break;
+    case "VMSAK":
+      RetrieveProblemes(adminId);
+
+      break;
+    case "VMEDK":
+      RetrieveProblemes(adminId);
+
+      break;
+    case "VMSAK":
+      RetrieveProblemes(adminId);
+      break;
+
+    default:
+      logger.warn("no valid admin role provided");
+      res.status(401).send("No valid admin role provided");
   }
 };
 

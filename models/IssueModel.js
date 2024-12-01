@@ -25,6 +25,12 @@ const IssueModel = sequelize.define(
       }
 
     },
+    problemCategory:
+    {
+      type: DataTypes.ENUM,
+      values:["Political problem","Economical problem","Social problem"],
+      allowNull:false
+    },
     ProblemStatus:
     {
         type:DataTypes.ENUM,
